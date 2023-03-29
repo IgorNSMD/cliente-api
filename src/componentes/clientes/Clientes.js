@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment }  from 'react';
 
 // importar cliente axios
 import clienteAxios from '../../config/axios';
-
+import Cliente from './Cliente';
 
 function Clientes(props) {
 
@@ -32,9 +32,12 @@ function Clientes(props) {
             <h2>Clientes</h2>
 
             <ul className="listado-clientes">
-                {clientes.map(cliente => {
-                    console.log(cliente)
-                })}
+                {clientes.map(cliente => (
+                    <Cliente 
+                        key={cliente._id}
+                        cliente={cliente}
+                    />
+                ))}
             </ul>
 
         </Fragment>
