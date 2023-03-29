@@ -1,22 +1,37 @@
 import React, {Fragment}  from 'react';
 
+// Routing
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 /*** Layout */
 import Header from './componentes/layout/Header';
 import Navegacion from './componentes/layout/Navegacion';
 
+/** Componentes */
+import Clientes from './componentes/clientes/Clientes';
+import Productos from './componentes/productos/Productos';
+import Pedidos from './componentes/pedidos/Pedidos';
+
 function App() {
   return (
-    <Fragment>
-       <Header/>
-       <div className="grid contenedor contenido-principal">
-         <Navegacion/>
+    <Router>
+      <Fragment>
+        <Header/>
+        <div className="grid contenedor contenido-principal">
+          <Navegacion/>
 
-         <main className="caja-contenido col-9">  
-            { /* TODO: Routing a los diferentes componentes */ }
-         </main>
+          <main className="caja-contenido col-9">  
+             <Routes>
+                <Route exact path='/' Component={Clientes} />
+                <Route exact path='/Productos' Component={Productos} />
+                <Route exact path='/Pedidos' Component={Pedidos} />
+             </Routes>
+          </main>
 
-       </div>
-    </Fragment>
+        </div>
+      </Fragment>
+    </Router>
+
 
   );
 }
