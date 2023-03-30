@@ -1,6 +1,16 @@
 import React, {Fragment, useState }  from 'react';
+import {useNavigate } from 'react-router-dom';
+
+import Swal from 'sweetalert2';
+
+import clienteAxios from '../../config/axios';
+
+//let navigate = useNavigate();
 
 function NuevoCliente(){ 
+
+    const navigate  = useNavigate();
+
     //console.log('nuevo cliente...')
 
     // cliente = state, guardarcliente = funcion para guardar el state
@@ -20,9 +30,37 @@ function NuevoCliente(){
             ...cliente, 
             [e.target.name] : e.target.value
         })
-        console.log(cliente)
+        //console.log(cliente)
     }
 
+    // Añade en la REST API un cliente nuevo
+    const agregarCliente = e => {
+        e.preventDefault();
+        // enviar petición
+        clienteAxios.post('/clientes', cliente)
+            .then(res => {
+                
+                // console.log(res)
+                // validar si hay errores de mongo 
+                if(res.data.code === 11000) {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Hubo un error',
+                        text: 'Ese cliente ya esta registrado'
+                    })
+                } else {
+                    Swal.fire(
+                        'Se agregó el Cliente',
+                        res.data.mensaje,
+                        'success'
+                    )
+                }
+
+                // Redireccionar
+                navigate(`/`);
+            });
+    }
+    
     // Validar el formulario
     const validarCliente = () => {
         // Destructuring
@@ -34,13 +72,13 @@ function NuevoCliente(){
         // return true o false
         return valido;
     }
-        
+
     return (
         <Fragment>
             <h2>Nuevo Cliente</h2>
 
             <form
-
+                onSubmit={agregarCliente}
             >
                 <legend>Llena todos los campos</legend>
                 <div className="campo">
