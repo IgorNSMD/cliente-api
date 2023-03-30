@@ -1,5 +1,5 @@
-import React, {Fragment, useState }  from 'react';
-import {useNavigate } from 'react-router-dom';
+import React,  {Fragment, useState, useEffect}   from 'react';
+import { useNavigate, useParams  } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
 
@@ -9,14 +9,14 @@ import clienteAxios from '../../config/axios';
 
 function EditarCliente(props){ 
     // obtener el ID
-    const { id } = props.match.params;
+    const { id } = useParams();
 
     const navigate  = useNavigate();
 
     //console.log('nuevo cliente...')
 
     // cliente = state, guardarcliente = funcion para guardar el state
-    const[cliente, guardarCliente] = useState({
+    const[cliente, datosCliente] = useState({
         nombre: '',
         apellido: '',
         empresa : '',
@@ -24,15 +24,54 @@ function EditarCliente(props){
         telefono :''
     });
 
+    // Query a la API
+    const consultarAPI = async () => {
+        const clienteConsulta = await clienteAxios.get(`/clientes/${id}`);
+
+       // colocar en el state
+       datosCliente(clienteConsulta.data);
+    }    
+
+    // useEffect, cuando el componente carga
+    useEffect( () => {
+        consultarAPI();
+    }, []);    
+
     // leer los datos del formulario
     const actualizarState = e => {
         // Almacenar lo que el usuario escribe en el state
-        guardarCliente({
+        datosCliente({
             // obtener una copia del state actual
             ...cliente, 
             [e.target.name] : e.target.value
         })
-        //console.log(cliente)
+    }    
+
+    // Envia una petición por axios para actualizar el cliente
+    const actualizarCliente = e => {
+        e.preventDefault();
+
+        // enviar petición por axios
+        clienteAxios.put(`/clientes/${cliente._id}`, cliente) 
+            .then(res => {
+                // validar si hay errores de mongo 
+                if(res.data.code === 11000) {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Hubo un error',
+                        text: 'Ese cliente ya esta registrado'
+                    })
+                } else {
+                    Swal.fire(
+                        'Correcto',
+                        'Se actualizó Correctamente',
+                        'success'
+                    )
+                }
+
+                // redireccionar
+                props.history.push('/');
+            })
     }
 
     
@@ -50,10 +89,11 @@ function EditarCliente(props){
 
     return (
         <Fragment>
-            <h2>Nuevo Cliente</h2>
+
+            <h2>Editar Cliente</h2>
 
             <form
-
+                onSubmit={actualizarCliente}
             >
                 <legend>Llena todos los campos</legend>
                 <div className="campo">
@@ -62,6 +102,7 @@ function EditarCliente(props){
                             placeholder="Nombre Cliente" 
                             name="nombre"
                             onChange={actualizarState}
+                            value={cliente.nombre}                            
                     />
                 </div>
 
@@ -71,6 +112,7 @@ function EditarCliente(props){
                           placeholder="Apellido Cliente" 
                           name="apellido" 
                           onChange={actualizarState}
+                          value={cliente.apellido}                          
                     />
                 </div>
             
@@ -80,6 +122,7 @@ function EditarCliente(props){
                           placeholder="Empresa Cliente" 
                           name="empresa" 
                           onChange={actualizarState}
+                          value={cliente.empresa}                          
                     />
                 </div>
 
@@ -89,6 +132,7 @@ function EditarCliente(props){
                             placeholder="Email Cliente" 
                             name="email" 
                             onChange={actualizarState}
+                            value={cliente.email}                            
                     />
                 </div>
 
@@ -98,6 +142,7 @@ function EditarCliente(props){
                         placeholder="Teléfono Cliente" 
                         name="telefono" 
                         onChange={actualizarState}
+                        value={cliente.telefono}                        
                     />
                 </div>
 
@@ -105,7 +150,7 @@ function EditarCliente(props){
                     <input 
                         type="submit" 
                         className="btn btn-azul" 
-                        value="Agregar Cliente" 
+                        value="Guardar Cambios" 
                         disabled={ validarCliente() }
                     />
                 </div>
