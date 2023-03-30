@@ -10,6 +10,7 @@ import Navegacion from './componentes/layout/Navegacion';
 /** Componentes */
 import Clientes from './componentes/clientes/Clientes';
 import NuevoCliente from './componentes/clientes/NuevoCliente';
+import EditarCliente from './componentes/clientes/EditarCliente';
 
 import Productos from './componentes/productos/Productos';
 import Pedidos from './componentes/pedidos/Pedidos';
@@ -26,6 +27,8 @@ function App() {
              <Routes>
                 <Route exact path='/' Component={Clientes} />
                 <Route exact path='/clientes/nuevo' Component={NuevoCliente} />
+                <Route exact path="/clientes/editar/:id" Component={EditarCliente} />
+
                 <Route exact path='/Productos' Component={Productos} />
                 <Route exact path='/Pedidos' Component={Pedidos} />
              </Routes>
