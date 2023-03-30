@@ -70,7 +70,7 @@ function EditarCliente(props){
                 }
 
                 // redireccionar
-                props.history.push('/');
+                navigate(`/`);
             })
     }
 
