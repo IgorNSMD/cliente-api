@@ -23,6 +23,18 @@ function NuevoCliente(){
         console.log(cliente)
     }
 
+    // Validar el formulario
+    const validarCliente = () => {
+        // Destructuring
+        const { nombre, apellido, email, empresa, telefono} = cliente;
+
+        // revisar que las propiedades del state tengan contenido
+        let valido = !nombre.length || !apellido.length || !email.length || !empresa.length || !telefono.length;
+
+        // return true o false
+        return valido;
+    }
+        
     return (
         <Fragment>
             <h2>Nuevo Cliente</h2>
@@ -81,7 +93,7 @@ function NuevoCliente(){
                         type="submit" 
                         className="btn btn-azul" 
                         value="Agregar Cliente" 
-
+                        disabled={ validarCliente() }
                     />
                 </div>
             </form>
