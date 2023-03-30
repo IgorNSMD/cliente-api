@@ -26,7 +26,7 @@ function Clientes(props) {
     // use effect es similar a componentdidmount y willmount
     useEffect( () => { 
         consultarAPI()
-    })
+    }, [clientes])
 
     return ( 
         <Fragment>
