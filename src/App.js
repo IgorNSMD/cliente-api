@@ -35,8 +35,8 @@ function App() {
                 <Route exact path="/clientes/editar/:id" Component={EditarCliente} />
 
                 <Route exact path='/Productos' Component={Productos} />
-                <Route exact path="/productos/nuevo" component={NuevoProducto} />
-                <Route exact path="/productos/editar/:id" component={EditarProducto} />
+                <Route exact path="/productos/nuevo" Component={NuevoProducto} />
+                <Route exact path="/productos/editar/:id" Component={EditarProducto} />
 
                 <Route exact path='/Pedidos' Component={Pedidos} />
              </Routes>
