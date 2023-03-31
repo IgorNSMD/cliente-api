@@ -76,7 +76,7 @@ function NuevoProducto(props) {
 
     return ( 
         <Fragment>
-            <h2>NuevoProducto</h2>
+            <h2>Nuevo Producto</h2>
 
             <form
                 onSubmit={agregarProducto}
