@@ -24,20 +24,21 @@ function EditarProductos(props) {
     const [archivo, guardarArchivo] = useState('');    
     
     // cuando el componente carga
-    useEffect(() => { 
-
+    useEffect(() => {
         // consultar la api para traer el producto a editar
-        const consultarAPI = async () => {
-            const productoConsulta = await clienteAxios.get(`/productos/${id}`);
-            guardarProducto(productoConsulta.data);
-        }    
+       const consultarAPI = async () => {
+           const productoConsulta = await clienteAxios.get(`/productos/${id}`);
+           guardarProducto(productoConsulta.data);
+       }
 
-        consultarAPI();
-    }, [producto])
+       consultarAPI();
+   }, [])
 
     // Edita un Producto en la base de datos
     const editarProducto = async e => {
         e.preventDefault();
+
+        console.log(producto.nombre)
 
         // crear un formdata
         const formData = new FormData();
