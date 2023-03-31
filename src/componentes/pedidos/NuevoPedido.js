@@ -1,6 +1,9 @@
 import React, {useState, useEffect, Fragment}  from 'react';
 import { useNavigate, useParams  } from 'react-router-dom';
+
 import clienteAxios from '../../config/axios';
+
+import FormBuscarProducto from './FormBuscarProducto';
 
 function NuevoPedido() {
 
@@ -24,6 +27,15 @@ function NuevoPedido() {
 
     }, []);    
 
+    const buscarProducto = async e => {
+
+     }    
+
+    // almacenar una busqueda en el state
+    const leerDatosBusqueda = e => {
+      
+    }
+
     return (
         <Fragment>
             <h2>Nuevo Pedido</h2>  
@@ -35,12 +47,11 @@ function NuevoPedido() {
             </div>
 
             <form>
-                <legend>Busca un Producto y agrega una cantidad</legend>
 
-                <div className="campo">
-                    <label>Productos:</label>
-                    <input type="text" placeholder="Nombre Productos" name="productos" />
-                </div>
+                <FormBuscarProducto 
+                        buscarProducto={buscarProducto}
+                        leerDatosBusqueda={leerDatosBusqueda}
+                />
 
                 <ul className="resumen">
                     <li>
