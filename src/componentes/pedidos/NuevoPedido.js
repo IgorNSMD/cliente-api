@@ -1,5 +1,5 @@
 import React, {useState, useEffect, Fragment}  from 'react';
-import { useParams  } from 'react-router-dom';
+import { useNavigate, useParams  } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 import clienteAxios from '../../config/axios';
@@ -8,6 +8,10 @@ import FormBuscarProducto from './FormBuscarProducto';
 import FormCantidadProducto from './FormCantidadProducto';
 
 function NuevoPedido() { 
+
+
+    const navigate  = useNavigate();
+
     // extraer ID de cliente
     const { id } = useParams();
 
@@ -51,7 +55,7 @@ function NuevoPedido() {
             productoResultado.producto = resultadoBusqueda.data[0]._id;
             productoResultado.cantidad = 0;
             
-            console.log(productoResultado)
+            //console.log(productoResultado)
 
             // ponerlo en el state
             guardarProductos([...productos, productoResultado]);
@@ -122,7 +126,51 @@ function NuevoPedido() {
 
         // almacenar el Total
         guardarTotal(nuevoTotal);
-    }     
+    }    
+    
+    // Almacena el pedido en la BD
+    const realizarPedido = async e => {
+        e.preventDefault();
+
+        // extraer el ID
+        
+        //const { id } = useParams();
+
+        // construir el objeto
+        const pedido = {
+            "cliente" : id, 
+            "pedido" : productos, 
+            "total" : total
+        }
+
+        //console.log(pedido)
+
+        // almacenarlo en la BD
+        const resultado = await clienteAxios.post(`/pedidos/nuevo/${id}`, pedido);
+
+        // leer resultado
+        if(resultado.status === 200) {
+            // alerta de todo bien
+            Swal.fire({
+                type: 'success',
+                title: 'Correcto',
+                text: resultado.data.mensaje
+            })
+        } else {
+            // alerta de error
+            Swal.fire({
+                type: 'error',
+                title: 'Hubo un Error',
+                text: 'Vuelva a intentarlo'
+            })
+        }          
+
+
+        // redireccionar
+        navigate(`/pedidos`);
+        
+
+    }    
 
     return (
         <Fragment>
@@ -156,7 +204,7 @@ function NuevoPedido() {
 
             { total > 0 ? (
                     <form
-                        //onSubmit={realizarPedido}
+                        onSubmit={realizarPedido}
                     >
                         <input type="submit"
                               className="btn btn-verde btn-block"
