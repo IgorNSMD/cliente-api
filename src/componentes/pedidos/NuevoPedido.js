@@ -15,6 +15,7 @@ function NuevoPedido() {
     const [cliente, guardarCliente] = useState({});
     const [busqueda, guardarBusqueda] = useState('');
     const [productos, guardarProductos] = useState([]);
+    const [total, guardarTotal] = useState(0);
 
     useEffect(() => {
 
@@ -28,9 +29,11 @@ function NuevoPedido() {
 
         // llamar a la api
         consultarAPI();
-        
 
-    }, []);  
+        // actualizar el total a pagar
+        actualizarTotal();        
+
+    }, [productos]);  
 
     const buscarProducto = async e => {
 
@@ -96,6 +99,24 @@ function NuevoPedido() {
         guardarProductos(todosProductos);
      }    
 
+    // Actualizar el total a pagar
+    const actualizarTotal = () => {
+        // si el arreglo de productos es igual 0: el total es 0
+        if(productos.length === 0) {
+            guardarTotal(0);
+            return;
+        }
+
+        // calcular el nuevo total
+        let nuevoTotal = 0;
+
+        // recorrer todos los productos, sus cantidades y precios
+        productos.map(producto => nuevoTotal += (producto.cantidad * producto.precio)  );
+
+        // almacenar el Total
+        guardarTotal(nuevoTotal);
+    }     
+
     return (
         <Fragment>
            <h2> Nuevo Pedido </h2>
@@ -124,9 +145,18 @@ function NuevoPedido() {
                  ))}              
             </ul>  
 
-            <div className="enviar">
-                <input type="submit" className="btn btn-azul" value="Agregar Pedido" />
-            </div> 
+            <p className="total">Total a Pagar: <span>$ {total}</span> </p>
+
+            { total > 0 ? (
+                    <form
+                        //onSubmit={realizarPedido}
+                    >
+                        <input type="submit"
+                              className="btn btn-verde btn-block"
+                              value="Realizar Pedido" />
+                    </form>
+                ) : null 
+            }
 
         </Fragment>
 
