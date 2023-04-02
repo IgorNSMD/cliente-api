@@ -1,5 +1,5 @@
 import React, {useState, useEffect, Fragment}  from 'react';
-import { useNavigate, useParams  } from 'react-router-dom';
+import { useParams  } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 import clienteAxios from '../../config/axios';
@@ -97,7 +97,14 @@ function NuevoPedido() {
  
         // almacenarlo en el state
         guardarProductos(todosProductos);
-     }    
+     }  
+     
+    // Elimina Un producto del state 
+    const eliminarProductoPedido = id => {
+        const todosProductos = productos.filter(producto => producto.producto !== id );
+
+        guardarProductos(todosProductos)
+    }     
 
     // Actualizar el total a pagar
     const actualizarTotal = () => {
@@ -139,7 +146,7 @@ function NuevoPedido() {
                                 producto={producto}
                                 restarProductos={restarProductos}
                                 aumentarProductos={aumentarProductos}
-                                // eliminarProductoPedido={eliminarProductoPedido}
+                                eliminarProductoPedido={eliminarProductoPedido}
                                 index={index}
                             />
                  ))}              
