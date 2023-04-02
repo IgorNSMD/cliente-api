@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import clienteAxios from '../../config/axios';
 
 import FormBuscarProducto from './FormBuscarProducto';
+import FormCantidadProducto from './FormCantidadProducto';
 
 function NuevoPedido() { 
     // extraer ID de cliente
@@ -13,7 +14,8 @@ function NuevoPedido() {
     // state
     const [cliente, guardarCliente] = useState({});
     const [busqueda, guardarBusqueda] = useState('');
-    
+    const [productos, guardarProductos] = useState([]);
+
     useEffect(() => {
 
         // obtener el cliente
@@ -40,7 +42,17 @@ function NuevoPedido() {
         // si no hay resultados una alerta, contrario agregarlo al state
         
         if(resultadoBusqueda.data[0]) {
-            console.log(resultadoBusqueda)   
+               
+            let productoResultado = resultadoBusqueda.data[0];
+            // agregar la llave "producto" (copia de id)
+            productoResultado.producto = resultadoBusqueda.data[0]._id;
+            productoResultado.cantidad = 0;
+            
+            console.log(productoResultado)
+
+            // ponerlo en el state
+            guardarProductos([...productos, productoResultado]);
+
         } else {
             // no hay resultados
             Swal.fire({
@@ -73,57 +85,16 @@ function NuevoPedido() {
             />            
 
             <ul className="resumen">
-                <li>
-                    <div className="texto-producto">
-                        <p className="nombre">Macbook Pro</p>
-                        <p className="precio">$250</p>
-                    </div>
-                    <div className="acciones">
-                        <div className="contenedor-cantidad">
-                            <i className="fas fa-minus"></i>
-                            <input type="text" name="cantidad" />
-                            <i className="fas fa-plus"></i>
-                        </div>
-                        <button type="button" className="btn btn-rojo">
-                            <i className="fas fa-minus-circle"></i>
-                                Eliminar Producto
-                        </button>
-                    </div>
-                </li>
-                <li>
-                    <div className="texto-producto">
-                        <p className="nombre">Macbook Pro</p>
-                        <p className="precio">$250</p>
-                    </div>
-                    <div className="acciones">
-                        <div className="contenedor-cantidad">
-                            <i className="fas fa-minus"></i>
-                            <input type="text" name="cantidad" />
-                            <i className="fas fa-plus"></i>
-                        </div>
-                        <button type="button" className="btn btn-rojo">
-                            <i className="fas fa-minus-circle"></i>
-                                Eliminar Producto
-                        </button>
-                    </div>
-                </li>
-                <li>
-                    <div className="texto-producto">
-                        <p className="nombre">Macbook Pro</p>
-                        <p className="precio">$250</p>
-                    </div>
-                    <div className="acciones">
-                        <div className="contenedor-cantidad">
-                            <i className="fas fa-minus"></i>
-                            <input type="text" name="cantidad" />
-                            <i className="fas fa-plus"></i>
-                        </div>
-                        <button type="button" className="btn btn-rojo">
-                            <i className="fas fa-minus-circle"></i>
-                                Eliminar Producto
-                        </button>
-                    </div>
-                </li>
+                {productos.map((producto, index) => (
+                            <FormCantidadProducto 
+                                key={producto.producto}
+                                producto={producto}
+                                // restarProductos={restarProductos}
+                                // aumentarProductos={aumentarProductos}
+                                // eliminarProductoPedido={eliminarProductoPedido}
+                                index={index}
+                            />
+                 ))}              
             </ul>  
 
             <div className="enviar">
