@@ -69,6 +69,33 @@ function NuevoPedido() {
         guardarBusqueda( e.target.value );
     }
 
+    // actualizar la cantidad de productos
+    const restarProductos = i => {
+        // copiar el arreglo original de productos
+        const todosProductos = [...productos];
+
+        // validar si esta en 0 no puede ir mas alla
+        if(todosProductos[i].cantidad === 0) return;
+
+        // decremento
+        todosProductos[i].cantidad--;
+
+        // almacenarlo en el state
+        guardarProductos(todosProductos);
+
+    }    
+
+    const aumentarProductos = i => {
+        // copiar el arreglo para no mutar el original
+        const todosProductos = [...productos];
+ 
+        // incremento
+        todosProductos[i].cantidad++;
+ 
+        // almacenarlo en el state
+        guardarProductos(todosProductos);
+     }    
+
     return (
         <Fragment>
            <h2> Nuevo Pedido </h2>
@@ -89,8 +116,8 @@ function NuevoPedido() {
                             <FormCantidadProducto 
                                 key={producto.producto}
                                 producto={producto}
-                                // restarProductos={restarProductos}
-                                // aumentarProductos={aumentarProductos}
+                                restarProductos={restarProductos}
+                                aumentarProductos={aumentarProductos}
                                 // eliminarProductoPedido={eliminarProductoPedido}
                                 index={index}
                             />
