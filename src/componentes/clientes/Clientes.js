@@ -1,45 +1,72 @@
-import React, { useEffect, useState, Fragment }  from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState, useContext, Fragment } from 'react';
 
 // importar cliente axios
 import clienteAxios from '../../config/axios';
 import Cliente from './Cliente';
 import Spinner from '../layout/Spinner';
+import { Link, useNavigate } from 'react-router-dom';
+
+// import el Context
+import { CRMContext } from '../../context/CRMContext';
 
 function Clientes(props) {
+
+    const navigate  = useNavigate();
 
     // Trabajar con el state
     // clientes = state,  guardarClientes = funcion para guardar el state
     const [ clientes, guardarClientes ] = useState([]);
 
-    const consultarAPI = async() => {
-        //console.log('consultarAPI...')
-
-        const clientesConsulta = await clienteAxios.get('/clientes');
-
-        //console.log(clientesConsulta.data)
-
-        // colocar el resultado en el state
-        guardarClientes(clientesConsulta.data);
-
-    }
+    // utilizar valores del context
+    const [auth, guardarAuth ] = useContext( CRMContext );
 
     // use effect es similar a componentdidmount y willmount
-    useEffect( () => { 
-        consultarAPI()
-    }, [clientes])
+    useEffect( () => {
 
-    // spinner de carga
-    if(!clientes.length) return <Spinner />     
+        if(auth.token !== '') {
+            // Query a la API
+            const consultarAPI = async () => {
+                try {
+                    const clientesConsulta = await clienteAxios.get('/clientes', {
+                        headers: {
+                            Authorization : `Bearer ${auth.token}`
+                        }
+                    });
+    
+                    // colocar el resultado en el state
+                    guardarClientes(clientesConsulta.data);
 
-    return ( 
+                } catch (error) {
+                    // Error con authorizacion
+                    if(error.response.status = 500) {
+                        navigate(`/iniciar-sesion`);
+                    }
+                }
+            }
+            consultarAPI();
+        } else {
+            navigate(`/iniciar-sesion`);
+        }
+    }, [clientes] );
+
+
+    // Si el state esta como false
+    if(!auth.auth) {
+        navigate(`/iniciar-sesion`);
+    }
+
+    if(!clientes.length) return <Spinner /> 
+
+    
+    return (
         <Fragment>
+        
             <h2>Clientes</h2>
 
             <Link to={"/clientes/nuevo"} className="btn btn-verde nvo-cliente"> 
                 <i className="fas fa-plus-circle"></i>
                 Nuevo Cliente
-            </Link>            
+            </Link>
 
             <ul className="listado-clientes">
                 {clientes.map(cliente => (
@@ -53,5 +80,4 @@ function Clientes(props) {
         </Fragment>
     )
 }
-
 export default Clientes;

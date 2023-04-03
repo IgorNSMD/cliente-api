@@ -7,8 +7,12 @@ import clienteAxios from '../../config/axios';
 
 // Context
 
+import { CRMContext } from '../../context/CRMContext';
 
 function Login(props){
+
+    // Auth y token
+    const [auth, guardarAuth] = useContext(CRMContext);    
 
     const navigate  = useNavigate();
 
@@ -27,7 +31,13 @@ function Login(props){
 
             // extraer el token y colocarlo en localstorage
             const { token } = respuesta.data;
-            localStorage.setItem('token', token);      
+            localStorage.setItem('token', token);  
+            
+            // colocarlo en el state
+            guardarAuth({
+                token, 
+                auth: true
+            })            
 
             // alerta
             Swal.fire(
